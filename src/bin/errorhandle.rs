@@ -1,26 +1,29 @@
-use anyhow::anyhow;
-use anyhow::Result;
+use std::result::Result;
 
 fn main() {
     // Brazenly unwrap and panic if we get an `Err`
-    let mut x = a().unwrap();
+    let mut x = k().unwrap();
     assert_eq!(x, 1);
 
-    // With pattern matching
-    x = match a() {
+    // Pattern match the `Result` enum
+    x = match k() {
         Ok(i) => i + 1,
-        Err(_) => panic!(),
+        Err(_) => unreachable!(),
     };
     assert_eq!(x, 2);
 
     // With a so-called `if let` statement
-    x = if let Ok(i) = a() { i + 9 } else { panic!() };
+    x = if let Ok(i) = k() {
+        i + 9
+    } else {
+        unreachable!()
+    };
     assert_eq!(x, 10);
 
     // Vanilla `if...else` along with `is_err()` or `is_ok()`
-    let result = a();
+    let result = k();
     if result.is_err() {
-        panic!()
+        unreachable!()
     }
     x = result.unwrap() + 19; // safe to unwrap
     assert_eq!(x, 20);
@@ -36,7 +39,7 @@ fn main() {
 
     // Panic on `Err` and print `dying_message()`
     x = e().expect(&dying_message());
-    assert_eq!(x, 40); // Unreachable!
+    unreachable!(x);
 }
 
 struct A {
@@ -47,13 +50,13 @@ impl A {
     fn new(i: i64) -> Self {
         A { n: i }
     }
-    fn add(mut self, i: i64) -> Result<Self> {
+    fn add(mut self, i: i64) -> Result<Self, &'static str> {
         self.n += i;
         Ok(self)
     }
 }
 
-fn f(i: i64) -> Result<i64> {
+fn f(i: i64) -> Result<i64, &'static str> {
     // At each `?`, the unwrapped `Ok` is returned. If the chain fails at any point,
     // this function e.g. `f` returns the `Err` -- propogating it to the caller
     let x = A::new(i).add(i)?.add(i)?.add(i)?.n;
@@ -63,13 +66,13 @@ fn f(i: i64) -> Result<i64> {
 }
 
 // Function that always returns `Ok(1)`
-fn a() -> Result<i64> {
+fn k() -> Result<i64, &'static str> {
     Ok(1)
 }
 
 // Function that always returns `Err()`
-fn e() -> Result<i64> {
-    Err(anyhow!("------- Bazinga! -------"))
+fn e() -> Result<i64, &'static str> {
+    Err("------- Bazinga! -------")
 }
 
 // Just a fancy string

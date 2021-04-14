@@ -11,13 +11,13 @@ fn main() {
 
     // `iter()` receives `&self` e.g. borrows an immutable reference
     a.iter(/* &self */)
-        .for_each(|s /* &String */| {
+        .for_each(|s: &String| {
             println!("{:p} -> {}", s, s);
         });
 
     // `into_iter()` receives `self` -- essentially moving `a`!
     a.into_iter(/* self */)
-        .for_each(|s/* String */| {
+        .for_each(|s: String| {
             c.push(s);
         });
     // println!("{}", a) <- will not compile, because `a` was moved and dropped!
@@ -35,7 +35,7 @@ fn main() {
     thingees.sort_by(|a, b| b.order.cmp(&a.order));
 
     thingees
-        // `iter_mut()` is required when we wish to change something in the iterable.
+        // `iter_mut()` when we want to change something in the iterable.
         // It receives a mutable reference to `self` 
         .iter_mut(/* &mut self */)
         .filter(|thingee| thingee.order > 5)

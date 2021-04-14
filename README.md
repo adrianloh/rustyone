@@ -1,9 +1,9 @@
 # Rust
 
-1. ### [Error handling](/src/bin/errorhandle.rs)
+1. ### [Error handling](src/bin/errorhandle.rs)
 
    - ways to `unwrap`
-   - custom `Result` and `Err` with `anyhow`
+
 1. ### [Pattern matching](src/bin/match.rs)
 
 1. ### Structs
@@ -11,7 +11,7 @@
    - [Declare / Create](src/bin/struct_basic.rs)
    - [Sortable structs](src/bin/struct_sort.rs)
 
-1. ### [Iterators and Map/Filter/Reduce](src/bin/mapreduce.rs)
+1. ### [Iterators and Filter/Map/Reduce](src/bin/mapreduce.rs)
 
 1. ### [Closures](src/bin/closures.rs)
 
@@ -37,8 +37,9 @@
    - [`SeqQueue`](src/bin/queue.rs) and channels
    - [http and file io with channels](src/bin/channelretry.rs)
 
-1. ### [async tasks with `tokio`](src/bin/tokiotasks.rs)
+1. ### async
 
-1. ### HTTP server / client
-   - [Example](src/bin/asyncserver1.rs)
-   - [Example](src/bin/asyncserver2.rs)
+   - `tokio` [tasks](src/bin/tokiotasks.rs)
+   - http server + client and `FuturesUnordered`:
+     1. [Example 1](src/bin/asyncserver1.rs)
+     1. [Example 2](src/bin/asyncserver2.rs)

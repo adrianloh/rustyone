@@ -15,10 +15,8 @@ regex = "1"
 rand = "0.8.0"
 crossbeam = "0.8"
 ureq = { version = "*", features = ["json"] }
-anyhow = "1.0"
 actix-web = "4.0.0-beta.5"
 tokio = { version = "1.4", features = ["full"] }
 futures = "0.3"
 reqwest = "0.11.3"
 chrono = "0.4"
-chttp = "0.5.5"
