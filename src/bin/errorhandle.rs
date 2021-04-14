@@ -34,7 +34,11 @@ fn main() {
 
     // Like `unwrap_or`, but the return value is computed from the closure
     // The closure is given the value wrapped in `Err`
-    x = f(1).unwrap_or_else(|_err| 0);
+    let z = es(&6969).unwrap_or_else(|err| *err);
+    assert_eq!(z, 6969);
+
+    // Look at definition of `f()` to see chaining and error propagation
+    x = f(1).unwrap();
     assert_eq!(x, 40);
 
     // Panic on `Err` and print `dying_message()`
@@ -73,6 +77,10 @@ fn k() -> Result<i64, &'static str> {
 // Function that always returns `Err()`
 fn e() -> Result<i64, &'static str> {
     Err("------- Bazinga! -------")
+}
+
+fn es(x: &'static i64) -> Result<i64, &'static i64> {
+    Err(x)
 }
 
 // Just a fancy string
