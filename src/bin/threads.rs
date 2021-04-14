@@ -1,17 +1,17 @@
-use std::thread;
+use std::thread::{sleep, spawn};
 use std::time::Duration;
 
 use rand::Rng;
 
 struct O {
-    number: u32
+    number: u32,
 }
 
 fn main() {
     let mut handlers = Vec::new();
     for i in 1..=10 {
         let o = O { number: i };
-        handlers.push(thread::spawn(move || work(o)));
+        handlers.push(spawn(move || work(o)));
     }
     let mut total = 0;
     for handler in handlers {
@@ -27,7 +27,7 @@ fn main() {
 fn work(o: O) -> u32 {
     println!("==> {}", o.number);
     let delay = (o.number as u64) * 500;
-    thread::sleep(Duration::from_millis(delay));
+    sleep(Duration::from_millis(delay));
     if rand::thread_rng().gen_bool(0.2) {
         panic!("oh crap!")
     }

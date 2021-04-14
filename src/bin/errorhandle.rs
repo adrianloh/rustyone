@@ -36,7 +36,7 @@ fn main() {
 
     // Panic on `Err` and print `dying_message()`
     x = e().expect(&dying_message());
-    assert_eq!(x, 40); // We never get here
+    assert_eq!(x, 40); // Unreachable!
 }
 
 struct A {
@@ -55,23 +55,26 @@ impl A {
 
 fn f(i: i64) -> Result<i64> {
     // At each `?`, the unwrapped `Ok` is returned. If the chain fails at any point,
-    // this function e.g. `f` returns the `Err`, propogating it to the caller
+    // this function e.g. `f` returns the `Err` -- propogating it to the caller
     let x = A::new(i).add(i)?.add(i)?.add(i)?.n;
     // The chain succeeded, we're free to do stuff with `x`
     let y = x * 10;
     Ok(y)
 }
 
+// Function that always returns `Ok(1)`
 fn a() -> Result<i64> {
     Ok(1)
 }
 
+// Function that always returns `Err()`
 fn e() -> Result<i64> {
     Err(anyhow!("------- Bazinga! -------"))
 }
 
+// Just a fancy string
 fn dying_message() -> String {
-    let msg = "Hello darkness my old friend";
-    let stars = (0..msg.len()).map(|_| "*").collect::<Vec<&str>>().join("");
+    let msg = "Hello darkness my old friend".to_string();
+    let stars: String = vec!["*"; msg.len()].join("");
     format!("\n\n{}\n{}\n{}\n\n", stars, msg, stars)
 }
