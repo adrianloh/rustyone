@@ -1,0 +1,23 @@
+[package]
+name = "rustyone"
+version = "0.1.0"
+authors = ["adrianloh <adrian@adrian.wtf>"]
+edition = "2018"
+exclude = ["./notes/*"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+custom_error = "1.8.0"
+dirs = "3.0"
+walkdir = "2"
+regex = "1"
+rand = "0.8.0"
+crossbeam = "0.8"
+ureq = { version = "*", features = ["json"] }
+anyhow = "1.0"
+actix-web = "4.0.0-beta.5"
+tokio = { version = "1.4", features = ["full"] }
+futures = "0.3"
+reqwest = "0.11.3"
+chrono = "0.4"
