@@ -13,17 +13,17 @@ enum A {
 }
 
 fn main() {
-    // A few structures
+    // A few structures to start
     let vec_string = vec!["さび".to_owned(); 10];
     let vec_int = vec![1, 2, 3, 4];
     let vec_tuple = vec![("さび", 1), ("はい", 2), ("おげん", 3), ("なんて", 4)];
+    let vec_enums = vec![A::Ready, A::Player(1), A::Player(2), A::One];
     let vec_structs = vec![
         Color(128, 54, 255),
         Color(43, 230, 244),
         Color(256, 34, 91),
         Color(0, 0, 0),
     ];
-    let vec_enums = vec![A::Ready, A::Player(1), A::Player(2), A::One];
 
     // Literals
     match vec_string[0].as_str() {
@@ -39,8 +39,13 @@ fn main() {
 
     // Boolean
     vec_int.iter().for_each(|i| match i {
-        // match 1, 2 or 3 -- bind to `m`
-        m @ 1 | m @ 2 | m @ 3 => println!("bool: {}", m),
+        // match 1, 2 or 3 -- bind to `m` -- then match `m`
+        m @ 1 | m @ 2 | m @ 3 => match m {
+            1 => println!("We got one!"),
+            2 => println!("We got two!"),
+            3 => println!("We got three!"),
+            _ => unreachable!(),
+        },
         x => println!("ignored: {}", x),
     });
 
@@ -71,7 +76,7 @@ fn main() {
 
     // Structs
     vec_structs.iter().for_each(|color| match color {
-        Color(r, g, 200..=255) => println!("r: {}, g:{}", r, g),
+        Color(r, g, b @ 200..=255) => println!("r: {}, g:{}, b:{}", r, g, b),
         Color(0, 0, 0) => println!("black"),
         color => println!("reject: {:?}", color),
     });
@@ -92,7 +97,7 @@ fn main() {
     };
 
     let p2 = Palette {
-        color: Color(30, 90, 43),
+        color: Color(4, 19, 79),
         selected: false,
     };
 
@@ -102,7 +107,7 @@ fn main() {
         Palette {
             color: Color(r, g, b),
             selected: true,
-        } => println!("ok: {} {} {}", r, g, b),
+        } => println!("ok: {}", r + g + b),
         Palette {
             color: c,
             selected: false,

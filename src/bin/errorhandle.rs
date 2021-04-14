@@ -62,7 +62,7 @@ impl A {
 
 fn f(i: i64) -> Result<i64, &'static str> {
     // At each `?`, the unwrapped `Ok` is returned. If the chain fails at any point,
-    // this function e.g. `f` returns the `Err` -- propogating it to the caller
+    // this function e.g. `f()` returns the `Err` -- propogating it to the caller
     let x = A::new(i).add(i)?.add(i)?.add(i)?.n;
     // The chain succeeded, we're free to do stuff with `x`
     let y = x * 10;
