@@ -1,5 +1,3 @@
-//#![cfg_attr(debug_assertions, allow(dead_code, unused_imports, unused_variables))]
-
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::thread;
