@@ -119,7 +119,7 @@ fn main() {
         } => println!("reject: {:?}", c),
     });
 
-    // Same as above - using `let` - since there's only one arm
+    // Decompose using `let` - since there's only one arm
     let Palette {
         color: Color(r, g, b),
         selected: ok,
