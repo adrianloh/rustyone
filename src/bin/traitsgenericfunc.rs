@@ -26,7 +26,7 @@ impl Messy for B {
     }
 }
 
-// A "generic function" that takes a Messy's first member and adds `i` to it
+// A "generic function" that calls Messy's `first_plus_()` with `i`
 fn plus(x: &impl Messy, i: i64) -> i64 {
     x.first_plus_(i)
 }
@@ -41,21 +41,21 @@ where
 }
 
 fn main() {
-    let a = A(32);
+    let a = A(2020);
     let b = B("1979".to_owned());
 
     // a "generic closure" -- same as `plus` except we can't
     // use `impl Messy` in a closure's signature, so we use `dyn Messy`
     let call_print = |t: &dyn Messy| t.print_first();
 
-    // A vector of Messy-ies -- in this case, Rust needs to be hinted
+    // A vector of references to Messy-ables -- in this case, Rust needs to be hinted
     let messies: Vec<&dyn Messy> = vec![&a, &b];
 
-    messies.iter().for_each(|o| call_print(*o));
+    messies.iter().for_each(|o /*&&dyn Messy*/| call_print(*o));
 
     let mut x = plus(&b, 21);
     assert_eq!(x, 2000);
 
-    x = minus(&b, 1979);
+    x = minus(&a, 2020);
     assert_eq!(x, 0);
 }
