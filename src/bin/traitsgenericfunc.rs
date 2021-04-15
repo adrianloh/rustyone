@@ -26,18 +26,26 @@ impl Messy for B {
     }
 }
 
+// A "generic function" that takes a Messy's first member and adds `i` to it
 fn plus(x: &impl Messy, i: i64) -> i64 {
     x.first_plus_(i)
 }
 
+// An alternative way of defining a function like `plus` using `where`
+// Takes a Messy's first member and subtracts `i` from it
+fn minus<T>(x: &T, i: i64) -> i64
+where
+    T: Messy,
+{
+    x.first() - i
+}
+
 fn main() {
     let a = A(32);
-    a.print_first();
-
     let b = B("1979".to_owned());
-    b.print_first();
 
-    // same as `plus` except we can't use `impl Messy` in a closure's signature
+    // a "generic closure" -- same as `plus` except we can't
+    // use `impl Messy` in a closure's signature, so we use `dyn Messy`
     let call_print = |t: &dyn Messy| t.print_first();
 
     // A vector of Messy-ies -- in this case, Rust needs to be hinted
@@ -45,6 +53,9 @@ fn main() {
 
     messies.iter().for_each(|o| call_print(*o));
 
-    let x = plus(&b, 21);
+    let mut x = plus(&b, 21);
     assert_eq!(x, 2000);
+
+    x = minus(&b, 1979);
+    assert_eq!(x, 0);
 }
