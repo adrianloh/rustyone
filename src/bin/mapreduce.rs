@@ -20,7 +20,21 @@ fn main() {
         .for_each(|s: String| {
             c.push(s);
         });
-    // println!("{}", a) <- will not compile, because `a` was moved and dropped!
+    // println!("{}", a) <- will not compile, because `a` was moved into `into_iter()` and dropped!
+
+    // `b` is vector of references to Thingee-s
+    let b = vec![&Thingee { order: 1 }, &Thingee { order: 1 }];
+    b.iter().for_each(|ss: &&Thingee| {
+        // `ss` is a reference to a reference since we used `iter()`.
+        // Dereferencing gives us the original reference
+        let s /*&Thingee*/ = *ss;
+        println!("{:?}", s)
+    });
+    b.into_iter().for_each(|s: &Thingee| {
+        // `s` is already a reference, no need to dereference
+        println!("{:?}", s)
+    });
+    // println!("{}", b) <- will not compile, because `b` was moved into `into_iter()` and dropped!
 
     let mut thingees: Vec<_> = (1..=10)
         .map(|i| Thingee { order: i })

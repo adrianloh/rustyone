@@ -33,7 +33,7 @@
 
 1. ### Channels with [`crossbeam`](https://docs.rs/crossbeam/0.8.0/crossbeam/)
 
-   - [Basic](src/bin/channels.rs) Fan-out/Fan-in
+   - [Basic Fan-out/Fan-in](src/bin/channels.rs)
    - [`SeqQueue`](src/bin/queue.rs) and channels
    - [http and file io with channels](src/bin/channelretry.rs)
 
@@ -43,3 +43,5 @@
    - http server + client and `FuturesUnordered`:
      1. [Example 1](src/bin/asyncserver1.rs)
      1. [Example 2](src/bin/asyncserver2.rs)
+   
+1. ### [Traits and generic functions](src/bin/traitsgenericfunc.rs)
