@@ -31,7 +31,7 @@ fn plus(x: &impl Messy, i: i64) -> i64 {
     x.first_plus_(i)
 }
 
-// An alternative way of defining a function like `plus` using `where`
+// An alternative way of defining a function like `plus` using `where`.
 // Takes a Messy's first member and subtracts `i` from it
 fn minus<T>(x: &T, i: i64) -> i64
 where

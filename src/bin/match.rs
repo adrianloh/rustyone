@@ -1,11 +1,13 @@
 #[derive(Debug)]
 struct Color(i16, i16, i16);
 
+#[derive(Debug)]
 struct Palette {
     selected: bool,
     color: Color,
 }
 
+#[derive(Debug)]
 enum A {
     Ready,
     Player(i64),
@@ -27,13 +29,13 @@ fn main() {
 
     // Literals
     match vec_string[0].as_str() {
-        "さび" => println!("macthed literal"),
+        "さび" => println!("matched literal"),
         _ => unreachable!(),
     };
 
     match vec_string[0].as_str() {
         // bind match to var `matched`
-        matched @ "さび" => println!("matched @ {}", matched),
+        matched @ "さび" => println!("matched {}", matched),
         _ => unreachable!(),
     };
 
@@ -51,17 +53,26 @@ fn main() {
 
     // Range
     match vec_int[0] {
-        ref matched @ (0..=10) => println!("range: {}", matched),
-        _ => panic!(),
+        ref m @ 0..=10 => println!("range 1-10: {}", m),
+        ref m @ 11..=20 => unreachable!(m),
+        _ => unreachable!(),
     }
 
     // Guard expression
     match vec_string[0].as_str() {
-        m if m == "さび" => println!("guard @ {}", m),
+        m if m == "さび" => println!("guard expression: {}", m),
+        _ => unreachable!(),
+    };
+
+    // Guard as an extra conditional
+    match vec_string[0].as_str() {
+        m @ "さび" if 1 < 0 => unreachable!(m),
+        m @ "さび" if 1 > 0 => println!("guard conditional: {}", m),
         _ => unreachable!(),
     };
 
     // Slice pattern
+    // Note, vector's can't be matched, only slices, hence the call to `as_slice()`
     match vec_int.as_slice() {
         [a, .., d] => println!("slice: {} {}", a, d),
         _ => unreachable!(),
@@ -69,23 +80,23 @@ fn main() {
 
     // Tuple pattern
     vec_tuple.iter().for_each(|t| match t {
-        (s, 1) => println!("1: {}", s),
-        (s, 2) => println!("2: {}", s),
-        (_, x) => println!("unknown: {}", x),
+        (s, 1) => println!("tuple 1: {}", s),
+        (s, 2) => println!("tuple 2: {}", s),
+        (_, x) => println!("tuple x: {}", x),
     });
 
     // Structs
     vec_structs.iter().for_each(|color| match color {
-        Color(r, g, b @ 200..=255) => println!("r: {}, g:{}, b:{}", r, g, b),
+        // Where `b` is between 200 -> 255
+        Color(r, g, b @ 200..=255) => println!("r: {} g: {} b: {}", r, g, b),
         Color(0, 0, 0) => println!("black"),
         color => println!("reject: {:?}", color),
     });
 
     // Enums -- match each enum inside the vector
     vec_enums.iter().for_each(|e| match e {
-        A::Ready => println!("Ready"),
-        A::Player(x) => println!("Player: {}", x),
-        _ => println!("ignore enum"),
+        A::Player(x) => println!("player: {}", x),
+        m @ A::Ready | m @ A::One => println!("{:?}", m),
     });
 
     // Enums -- match the entire vector, get only player numbers
@@ -94,7 +105,7 @@ fn main() {
         _ => unreachable!(),
     }
 
-    // Nested decomposition
+    // Destructuring
 
     let p1 = Palette {
         color: Color(30, 90, 43),
@@ -112,17 +123,46 @@ fn main() {
         Palette {
             color: Color(r, g, b),
             selected: true,
-        } => println!("ok: {}", r + g + b),
+        } => println!("intensity: {:.4}", (r + g + b) as f64 / (255 * 3) as f64),
         Palette {
-            color: c,
+            color,
             selected: false,
-        } => println!("reject: {:?}", c),
+        } => println!("reject: {:?}", color),
     });
 
-    // Decompose using `let` - since there's only one arm
+    // Destructure using `let`
     let Palette {
         color: Color(r, g, b),
         selected: ok,
     } = p1;
     println!("{}: {} {} {}", ok, r, g, b);
+
+    // Destructuring function parameters
+    f1(&p1.color);
+
+    f2(&p2);
+
+    let color = (0.4541, 0.3212, 0.5667);
+    f3(&color);
+}
+
+fn f1(&Color(r, g, b): &Color) {
+    println!("r: {} g: {} b: {}", r, g, b)
+}
+
+fn f2(
+    &Palette {
+        color: Color(r, g, b),
+        selected, // shorthand field pattern
+    }: &Palette,
+) {
+    if selected {
+        println!("r: {} g: {} b: {}", r, g, b)
+    } else {
+        println!("r: {} g: {} b: {}", 0, 0, 0)
+    }
+}
+
+fn f3(&(r, g, b): &(f64, f64, f64)) {
+    println!("r: {} g: {} b: {}", r, g, b)
 }
