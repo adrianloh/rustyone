@@ -15,8 +15,8 @@ const ZEROLEN: u64 = 0;
 
 fn main() {
     // The pipe looks like this:
-    //  get --> getter --> got --> gotter -|
-    //               ^-----------reget <---|
+    //  get --> getter --> collect --> collector -|
+    //            ^---------------------reget <---|
     let (get, getter) = channel::unbounded::<String>();
     let (collect, collector) = channel::bounded::<Doug>(1);
     let reget = get.clone(); // Retries are sent here
