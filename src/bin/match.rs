@@ -81,13 +81,18 @@ fn main() {
         color => println!("reject: {:?}", color),
     });
 
-    // Enums
+    // Enums -- match each enum inside the vector
     vec_enums.iter().for_each(|e| match e {
         A::Ready => println!("Ready"),
-        A::Player(1) => println!("Player 1"),
-        A::Player(2) => println!("Player 2"),
+        A::Player(x) => println!("Player: {}", x),
         _ => println!("ignore enum"),
     });
+
+    // Enums -- match the entire vector, get only player numbers
+    match vec_enums.as_slice() {
+        [_, A::Player(x), A::Player(y), _] => println!("players: {} + {}", x, y),
+        _ => unreachable!(),
+    }
 
     // Nested decomposition
 

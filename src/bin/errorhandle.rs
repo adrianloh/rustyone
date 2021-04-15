@@ -69,16 +69,17 @@ fn f(i: i64) -> Result<i64, &'static str> {
     Ok(y)
 }
 
-// Function that always returns `Ok(1)`
+// Function always returns `Ok(1)`
 fn k() -> Result<i64, &'static str> {
     Ok(1)
 }
 
-// Function that always returns `Err()`
+// Function always returns `Err()`
 fn e() -> Result<i64, &'static str> {
     Err("------- Bazinga! -------")
 }
 
+// Function takes its argument and returns it wrapped in an `Err`
 fn es(x: &'static i64) -> Result<i64, &'static i64> {
     Err(x)
 }
