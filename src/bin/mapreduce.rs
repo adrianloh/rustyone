@@ -5,38 +5,59 @@ struct Thingee {
     order: u32,
 }
 
+fn move_string(s: String) {
+    println!("{}", s);
+}
+
+fn ref_string(s: &str) {
+    println!("{}", s);
+}
+
 fn main() {
-    let a = vec!["( ❤U❤)(•́▿•̀ )".to_owned(); 1];
-    let mut c = vec![];
+    /* `iter()` , `into_iter()` and references */
+
+    // `a` is vector of Strings
+    let a: Vec<String> = vec!["( ❤U❤)(•́▿•̀ )".to_owned()];
 
     // `iter()` receives `&self` e.g. borrows an immutable reference
     a.iter(/* &self */)
         .for_each(|s: &String| {
-            println!("{:p} -> {}", s, s);
+            ref_string(s)
         });
 
     // `into_iter()` receives `self` -- essentially moving `a`!
     a.into_iter(/* self */)
         .for_each(|s: String| {
-            c.push(s);
+            move_string(s);
         });
     // println!("{}", a) <- will not compile, because `a` was moved into `into_iter()` and dropped!
 
-    // `b` is vector of references to Thingee-s
-    let b = vec![&Thingee { order: 1 }, &Thingee { order: 1 }];
-    b.iter().for_each(|ss: &&Thingee| {
+    // `b` is vector of references to Strings
+    let stringee = "( ❤U❤)(•́▿•̀ )".to_owned();
+    let b: Vec<&String> = vec![&stringee];
+    let mut refs = vec![];
+
+    b.iter().for_each(|ss: &&String| {
         // `ss` is a reference to a reference since we used `iter()`.
-        // Dereferencing gives us the original reference
+        // Dereferencing into `s` gives us the original reference
         let s /*&Thingee*/ = *ss;
-        println!("{:?}", s)
+        println!("{:p} -> {:p}", ss, s);
+        refs.push(s);
     });
-    b.into_iter().for_each(|s: &Thingee| {
+
+    b.into_iter().for_each(|s: &String| {
         // `s` is already a reference, no need to dereference
-        println!("{:?}", s)
+        println!("{:p}", s);
+        refs.push(s);
     });
     // println!("{}", b) <- will not compile, because `b` was moved into `into_iter()` and dropped!
 
-    let mut thingees: Vec<_> = (1..=10)
+    assert_eq!(refs[0], refs[1]);
+
+    /* iterator functions/adapters */
+
+    // Build a vector of Thingees with map/collect
+    let mut thingees: Vec<Thingee> = (1..=10)
         .map(|i| Thingee { order: i })
         .inspect(|t| println!("{:?}", t))
         // Iterators are lazily evaluated. Functions like `collect()`,
@@ -56,8 +77,8 @@ fn main() {
         .for_each(|thingee| thingee.order *= 100);
 
     // Take 5 times from an iterator that repeats its argument forever.
-    // Collect the results -- a `Vec<String>` -- and `join()`
-    println!("{}", repeat("🙃").take(5).collect::<Vec<_>>().join("😲"));
+    // Collect the results and `join()`
+    println!("{}", repeat("🙃").take(5).collect::<Vec<&str>>().join("😲"));
 
     let total = thingees
         .iter()

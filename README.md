@@ -45,3 +45,4 @@
      1. [Example 2](src/bin/asyncserver2.rs)
    
 1. ### [Traits and generic functions](src/bin/traitsgenericfunc.rs)
+   - [Pseudo multiple dispatch](/src/bin/multidispatch.rs)
