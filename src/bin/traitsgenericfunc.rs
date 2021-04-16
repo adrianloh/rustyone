@@ -33,6 +33,8 @@ impl Messy for B {
     }
 }
 
+// Just an empty wrapper for Messify's methods
+//  What's the better way?
 struct C();
 
 trait Messify<T> {
@@ -117,7 +119,7 @@ fn main() {
     assert_eq!(x, 0);
 
     // `C::messify()` returns "something" that implements `Messy` (depending on what we
-    // pass in). We cannot know what exactly is Messy e.g. (is it an `A` or `B`?)
+    // pass in). We cannot know what exactly is Messy¹ e.g. (is it an `A` or `B`?)
     // but we can call all the methods associated with being `Messy`.
     let m1 = C::messify(43);
     assert_eq!(m1.first(), 43);
@@ -129,6 +131,6 @@ fn main() {
     println!("{} terminated", now.log_time());
     println!("{}", now.unix_nano());
 
-    // It *is* possible to get the underlying type with `c_a.downcast_ref::<A>()`
+    // ¹ It *is* possible to get the underlying type with `c_a.downcast_ref::<A>()`
     // but that's a whole different bag of worms.
 }
