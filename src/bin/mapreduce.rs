@@ -19,20 +19,20 @@ fn main() {
     // `a` is vector of Strings
     let a: Vec<String> = vec!["( ❤U❤)(•́▿•̀ )".to_owned()];
 
-    // `iter()` receives `&self` e.g. borrows an immutable reference
+    // `iter()` receives `&self` e.g. it borrows an immutable reference to `a`
     a.iter(/* &self */)
         .for_each(|s: &String| {
             ref_string(s)
         });
 
-    // `into_iter()` receives `self` -- essentially moving `a`!
+    // `into_iter()` receives `self` -- essentially moves `a`!
     a.into_iter(/* self */)
         .for_each(|s: String| {
             move_string(s);
         });
     // println!("{}", a) <- will not compile, because `a` was moved into `into_iter()` and dropped!
 
-    // `b` is vector of references to Strings
+    // `b` is a vector of references to Strings
     let stringee = "( ❤U❤)(•́▿•̀ )".to_owned();
     let b: Vec<&String> = vec![&stringee];
     let mut refs = vec![];
@@ -54,15 +54,16 @@ fn main() {
 
     assert_eq!(refs[0], refs[1]);
 
-    // A `for` loop with `&` is like `iter(&self)`
+    // a `for` loop with `&` is like `iter(&self)`
     let c: Vec<String> = vec![stringee];
     for s in &c {
-        // s is `&String`
+        // `s` is `&String`
         ref_string(s)
     }
 
-    // A `for` loop without `&` is like `into_iter(self)`
+    // a `for` loop without `&` is like `into_iter(self)`
     for s in c {
+        // `s` is `String`
         move_string(s)
     }
     // Once again, `c` has moved and is bye bye, so is `stringee` since we moved it into `c` 😭!
@@ -74,7 +75,7 @@ fn main() {
         .map(|i| Thingee { order: i })
         .inspect(|t| println!("{:?}", t))
         // Iterators are lazily evaluated. Functions like `collect()`,
-        // `for_each()`, `count()` consume the iterator. They must be
+        // `for_each()`, `count()` consume the iterator. They're always
         // at the end of the chain to "get the ball rolling"
         .collect();
 
