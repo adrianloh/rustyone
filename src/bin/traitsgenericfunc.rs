@@ -4,8 +4,6 @@ struct A(i64);
 #[derive(Debug)]
 struct B(String);
 
-struct C();
-
 trait Messy {
     // Must be defined by implementors
     fn first(&self) -> i64;
@@ -30,6 +28,8 @@ impl Messy for B {
         self.0.parse::<i64>().unwrap_or(0)
     }
 }
+
+struct C();
 
 trait Messify<T> {
     // We cannot simply return `-> dyn Messy` because whatever that's
@@ -56,7 +56,12 @@ fn plus(x: &impl Messy, i: i64) -> i64 {
     x.first_plus_(i)
 }
 
-// An alternative way of defining a function like `plus` using `where`.
+// An alternative way of defining `plus` using `fn<T>`
+fn plusplus<T: Messy>(x: &T, i: i64) -> i64 {
+    plus(x, i)
+}
+
+// Yet another way of defining a function like `plus` using `where`
 // Takes a Messy's first member and subtracts `i` from it
 fn minus<T>(x: &T, i: i64) -> i64
 where
@@ -73,25 +78,27 @@ fn main() {
     // use `impl Messy` in a closure's signature, so we use `dyn Messy`
     let call_print = |t: &dyn Messy| t.print_first();
 
-    // A vector of references to Messy-ables -- in this case, Rust needs to be hinted
+    // A vector of references to Messy-ables -- in this case,
+    // Rust needs to be type hinted
     let messies: Vec<&dyn Messy> = vec![&a, &b];
-
     messies.iter().for_each(|o /*&&dyn Messy*/| call_print(*o));
 
     let mut x = plus(&b, 21);
     assert_eq!(x, 2000);
 
+    x = plusplus(&b, 21);
+    assert_eq!(x, 2000);
+
     x = minus(&a, 2020);
     assert_eq!(x, 0);
 
-    // `c.messify()` returns "something" that implements Messy (depending on what we
+    // `C().messify()` returns "something" that implements `Messy` (depending on what we
     // pass in). We cannot know what exactly is Messy e.g. (is it an `A` or `B`?)
     // but we can call all the methods associated with being `Messy`.
-    let c = C();
-    let c_a = c.messify(43);
+    let c_a = C().messify(43);
     assert_eq!(c_a.first(), 43);
 
-    let c_b = c.messify("1979");
+    let c_b = C().messify("1979");
     assert_eq!(c_b.first(), 1979);
 
     // It *is* possible to get the underlying type with `c_a.downcast_ref::<A>()`

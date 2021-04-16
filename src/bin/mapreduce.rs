@@ -54,6 +54,19 @@ fn main() {
 
     assert_eq!(refs[0], refs[1]);
 
+    // A `for` loop with `&` is like `iter(&self)`
+    let c: Vec<String> = vec![stringee];
+    for s in &c {
+        // s is `&String`
+        ref_string(s)
+    }
+
+    // A `for` loop without `&` is like `into_iter(self)`
+    for s in c {
+        move_string(s)
+    }
+    // Once again, `c` has moved and is bye bye, so is `stringee` since we moved it into `c` 😭!
+
     /* iterator functions/adapters */
 
     // Build a vector of Thingees with map/collect

@@ -17,13 +17,13 @@ async fn main() {
     // Spawn concurrent tasks
     let mut handles = vec![];
     for mut k in 1..=10_000 {
-        // If we're just calling `ten_plus_()`, we can just do:
-        // `spawn(ten_plus_(x))`
-        // `spawn()` does the awaiting for us
         let join_handle /*tokio::task::JoinHandle*/ =
+            // If we're just calling `ten_plus_()`, we can just do:
+            // `spawn(ten_plus_(x))`
+            // `spawn()` does the awaiting for us
             spawn(async move {
-                k = ten_plus_(k).await;
-                ten_plus_(k).await
+                k = ten_plus_(k).await; // blocks for a second
+                ten_plus_(k).await      // blocks for another second
             });
         handles.push(join_handle);
     }

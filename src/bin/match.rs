@@ -23,7 +23,7 @@ fn main() {
     let vec_structs = vec![
         Color(128, 54, 255),
         Color(43, 230, 244),
-        Color(256, 34, 91),
+        Color(255, 34, 91),
         Color(0, 0, 0),
     ];
 
