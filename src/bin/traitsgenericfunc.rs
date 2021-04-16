@@ -1,3 +1,7 @@
+use chrono::offset::Local;
+use chrono::DateTime;
+use std::time::SystemTime;
+
 #[derive(Debug)]
 struct A(i64);
 
@@ -11,7 +15,7 @@ trait Messy {
     fn print_first(&self) {
         println!("My first member is: {:?}", self.first())
     }
-    // This is also free of charge
+    // Also free!
     fn first_plus_(&self, i: i64) -> i64 {
         self.first() + i
     }
@@ -48,6 +52,26 @@ impl Messify<&str> for C {
 impl Messify<i64> for C {
     fn messify(i: i64) -> Box<dyn Messy> {
         Box::new(A(i))
+    }
+}
+
+// A trait that extends a type -- in this case we're extending rust's `SystemTime`
+trait LogTime {
+    fn log_time(self) -> String;
+    fn unix_nano(self) -> u128;
+}
+
+impl LogTime for SystemTime {
+    // A slight gotcha, `SystemTime` implements `Copy`, so after these
+    // methods are done, `self` is still around for the caller!
+    fn log_time(self) -> String {
+        let dt: DateTime<Local> = self.into();
+        dt.format("[%d %b %Y %T]").to_string()
+    }
+    fn unix_nano(self) -> u128 {
+        self.duration_since(SystemTime::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
     }
 }
 
@@ -100,6 +124,10 @@ fn main() {
 
     let m2 = C::messify("1979");
     assert_eq!(m2.first(), 1979);
+
+    let now = SystemTime::now();
+    println!("{} terminated", now.log_time());
+    println!("{}", now.unix_nano());
 
     // It *is* possible to get the underlying type with `c_a.downcast_ref::<A>()`
     // but that's a whole different bag of worms.

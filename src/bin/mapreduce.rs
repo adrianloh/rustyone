@@ -24,7 +24,7 @@ fn main() {
         .for_each(|s: String| {
             move_string(s);
         });
-    // println!("{}", a) <- will not compile, because `a` was moved into `into_iter()` and dropped!
+    // println!("{}", a) [!!!] will not compile, because `a` was moved into `into_iter()` and dropped!
 
     // `b` is a vector of references to Strings
     let b: Vec<&String> = vec![&stringee];
@@ -43,7 +43,7 @@ fn main() {
         println!("{:p}", s);
         refs.push(s);
     });
-    // println!("{}", b) <- will not compile, because `b` was moved into `into_iter()` and dropped!
+    // println!("{}", b) [!!!] will not compile, because `b` was moved into `into_iter()` and dropped!
 
     assert_eq!(refs[0], refs[1]);
 
