@@ -106,7 +106,7 @@ fn main() {
         _ => unreachable!(),
     }
 
-    // ## Destructuring
+    //## Destructuring
 
     let p1 = Palette {
         color: Color(30, 90, 43),

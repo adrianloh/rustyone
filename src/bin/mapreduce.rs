@@ -6,7 +6,7 @@ struct Thingee {
 }
 
 fn main() {
-    // ## `iter()` , `into_iter()` and references
+    //## `iter()` , `into_iter()` and references
 
     let stringee = "( ❤U❤)(•́▿•̀ )".to_owned();
 
@@ -63,7 +63,7 @@ fn main() {
     }
     // Once again, `c` has moved and is bye bye, so is `stringee` since we moved it into `c` 😭!
 
-    // ## Iterator functions/adapters
+    //## Iterator functions/adapters
 
     // Build a vector of Thingees with map/collect
     let mut thingees: Vec<Thingee> = (1..=10)
