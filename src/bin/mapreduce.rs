@@ -5,24 +5,18 @@ struct Thingee {
     order: u32,
 }
 
-fn move_string(s: String) {
-    println!("{}", s);
-}
-
-fn ref_string(s: &str) {
-    println!("{}", s);
-}
-
 fn main() {
-    /* `iter()` , `into_iter()` and references */
+    // ## `iter()` , `into_iter()` and references
+
+    let stringee = "( ❤U❤)(•́▿•̀ )".to_owned();
 
     // `a` is vector of Strings
-    let a: Vec<String> = vec!["( ❤U❤)(•́▿•̀ )".to_owned()];
+    let a: Vec<String> = vec![stringee.clone()];
 
     // `iter()` receives `&self` e.g. it borrows an immutable reference to `a`
     a.iter(/* &self */)
         .for_each(|s: &String| {
-            ref_string(s)
+            borrow_string(s)
         });
 
     // `into_iter()` receives `self` -- essentially moves `a`!
@@ -33,14 +27,13 @@ fn main() {
     // println!("{}", a) <- will not compile, because `a` was moved into `into_iter()` and dropped!
 
     // `b` is a vector of references to Strings
-    let stringee = "( ❤U❤)(•́▿•̀ )".to_owned();
     let b: Vec<&String> = vec![&stringee];
-    let mut refs = vec![];
+    let mut refs: Vec<&String> = vec![];
 
     b.iter().for_each(|ss: &&String| {
-        // `ss` is a reference to a reference since we used `iter()`.
+        // `ss` is a reference to a reference 🧐 since we used `iter()`.
         // Dereferencing into `s` gives us the original reference
-        let s /*&Thingee*/ = *ss;
+        let s /*&String*/ = *ss;
         println!("{:p} -> {:p}", ss, s);
         refs.push(s);
     });
@@ -54,21 +47,23 @@ fn main() {
 
     assert_eq!(refs[0], refs[1]);
 
-    // a `for` loop with `&` is like `iter(&self)`
+    // `c` is vector of Strings
     let c: Vec<String> = vec![stringee];
+
+    // a `for` loop with `&` is like `iter(&self)`
     for s in &c {
         // `s` is `&String`
-        ref_string(s)
+        borrow_string(s)
     }
 
-    // a `for` loop without `&` is like `into_iter(self)`
+    // a `for` loop _without_ `&` is like `into_iter(self)`
     for s in c {
         // `s` is `String`
         move_string(s)
     }
     // Once again, `c` has moved and is bye bye, so is `stringee` since we moved it into `c` 😭!
 
-    /* iterator functions/adapters */
+    // ## Iterator functions/adapters
 
     // Build a vector of Thingees with map/collect
     let mut thingees: Vec<Thingee> = (1..=10)
@@ -84,8 +79,8 @@ fn main() {
     thingees.sort_by(|a, b| b.order.cmp(&a.order));
 
     thingees
-        // `iter_mut()` when we want to change something in the iterable.
-        // It receives a mutable reference to `self` 
+        // Use `iter_mut()` when you want to change something in the iterable.
+        // `iter_mut()` receives a mutable reference to `self`
         .iter_mut(/* &mut self */)
         .filter(|thingee| thingee.order > 5)
         .for_each(|thingee| thingee.order *= 100);
@@ -102,4 +97,27 @@ fn main() {
         .count(); // Start the ball rolling, return the number of iterations
 
     println!("{}", vec!["🙄"; total].join(""));
+
+    // Reduce/fold
+    let orders = thingees
+        .iter()
+        // push each `thingee.order` into the "orders" vector
+        .fold(Vec::new(), |mut orders, t| {
+            orders.push(t.order);
+            orders
+        });
+
+    // Inspect orders
+    println!("orders: {:?}", orders);
+
+    // Sum the vector
+    println!("total order: {}", orders.iter().sum::<u32>());
+}
+
+fn borrow_string(s: &str) {
+    println!("borrow: {}", s);
+}
+
+fn move_string(s: String) {
+    println!("moved: {}", s);
 }

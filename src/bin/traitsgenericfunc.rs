@@ -36,18 +36,18 @@ trait Messify<T> {
     // Messy (which could be a gazillion different types) cannot be
     // determined at compile time (E0277). So, we need to `Box` the
     // `Messy` thing up.
-    fn messify(&self, _: T) -> Box<dyn Messy>;
+    fn messify(_: T) -> Box<dyn Messy>;
 }
 
 impl Messify<&str> for C {
-    fn messify(&self, s: &str) -> Box<dyn Messy> {
+    fn messify(s: &str) -> Box<dyn Messy> {
         Box::new(B(s.to_string()))
     }
 }
 
 impl Messify<i64> for C {
-    fn messify(&self, s: i64) -> Box<dyn Messy> {
-        Box::new(A(s))
+    fn messify(i: i64) -> Box<dyn Messy> {
+        Box::new(A(i))
     }
 }
 
@@ -92,14 +92,14 @@ fn main() {
     x = minus(&a, 2020);
     assert_eq!(x, 0);
 
-    // `C().messify()` returns "something" that implements `Messy` (depending on what we
+    // `C::messify()` returns "something" that implements `Messy` (depending on what we
     // pass in). We cannot know what exactly is Messy e.g. (is it an `A` or `B`?)
     // but we can call all the methods associated with being `Messy`.
-    let c_a = C().messify(43);
-    assert_eq!(c_a.first(), 43);
+    let m1 = C::messify(43);
+    assert_eq!(m1.first(), 43);
 
-    let c_b = C().messify("1979");
-    assert_eq!(c_b.first(), 1979);
+    let m2 = C::messify("1979");
+    assert_eq!(m2.first(), 1979);
 
     // It *is* possible to get the underlying type with `c_a.downcast_ref::<A>()`
     // but that's a whole different bag of worms.

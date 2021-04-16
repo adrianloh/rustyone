@@ -4,7 +4,7 @@
 
    - ways to `unwrap`
 
-1. ### [Pattern matching](src/bin/match.rs)
+1. ### [Pattern matching and destructuring](src/bin/match.rs)
 
 1. ### Structs
 

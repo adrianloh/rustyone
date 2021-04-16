@@ -27,19 +27,20 @@ fn main() {
         Color(0, 0, 0),
     ];
 
-    // Literals
+    // String literals
     match vec_string[0].as_str() {
         "さび" => println!("matched literal"),
         _ => unreachable!(),
     };
 
+    // Binding
     match vec_string[0].as_str() {
         // bind match to var `matched`
         matched @ "さび" => println!("matched {}", matched),
         _ => unreachable!(),
     };
 
-    // Boolean
+    // Boolean and integer literals
     vec_int.iter().for_each(|i| match i {
         // match 1, 2 or 3 -- bind to `m` -- then match `m`
         m @ 1 | m @ 2 | m @ 3 => match m {
@@ -72,7 +73,7 @@ fn main() {
     };
 
     // Slice pattern
-    // Note, vector's can't be matched, only slices, hence the call to `as_slice()`
+    // Important: vector's can't be matched, only slices, hence the call to `as_slice()`
     match vec_int.as_slice() {
         [a, .., d] => println!("slice: {} {}", a, d),
         _ => unreachable!(),
@@ -105,7 +106,7 @@ fn main() {
         _ => unreachable!(),
     }
 
-    // Destructuring
+    // ## Destructuring
 
     let p1 = Palette {
         color: Color(30, 90, 43),
@@ -119,11 +120,14 @@ fn main() {
 
     let pp = vec![&p1, &p2];
 
+    // Destructure with `match`
     pp.iter().for_each(|p| match p {
+        // If `selected` is `true`, get `r,g,b` components of `Color`
         Palette {
             color: Color(r, g, b),
             selected: true,
         } => println!("intensity: {:.4}", (r + g + b) as f64 / (255 * 3) as f64),
+        // If `selected` is `true`, get `r,g,b` components of `Color`
         Palette {
             color,
             selected: false,
