@@ -45,4 +45,6 @@
      1. [Example 2](src/bin/asyncserver2.rs)
    
 1. ### [Traits and generic functions](src/bin/traitsgenericfunc.rs)
+   - [Extending types](src/bin/traitsextend.rs)
    - [Pseudo multiple dispatch](/src/bin/multidispatch.rs)
+   - [Returning values based on assigned type](src/bin/traitscast.rs)
