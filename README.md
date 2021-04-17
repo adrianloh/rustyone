@@ -46,3 +46,6 @@
    - [Extending types](src/bin/traitsextend.rs)
    - [Pseudo multiple dispatch](/src/bin/multidispatch.rs)
    - [Returning values based on assigned type](src/bin/traitscast.rs)
+   
+1. ### http
+   - [non-async client](src/bin/httpclient.rs) with `ureq`

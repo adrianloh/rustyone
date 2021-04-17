@@ -10,7 +10,7 @@ use tokio::time::{sleep, Duration};
 
 #[actix_web::main]
 async fn main() {
-    let server = server_run(); // `server` is `await`-able but we don't want to
+    let server = server_run(); // `server` is `await`-able but we're not going to
 
     let mut requests = FuturesUnordered::new();
 
@@ -39,7 +39,7 @@ async fn main() {
     }
     println!("{:>11}: {} bytes", "total", bytes_received);
 
-    // Shut the server down _gracefully_
+    // Shut the server down
     server.stop(/*graceful*/ true).await;
 }
 

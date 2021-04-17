@@ -1,21 +1,72 @@
 #![allow(dead_code)]
 
-use ureq::Error;
+use chrono::NaiveDateTime;
+use serde::{Deserialize, Deserializer};
+use std::process::exit;
+use std::str::FromStr;
 
-const BETINA: &str = "https://gist.githubusercontent.com/adrianloh/d85483b8d561397d03adc89f30943dcc/raw/010913dd40b3c8556b149b91b0a5a486d6764cde/females.txt";
+#[derive(Debug)]
+struct Ip4(u8, u8, u8, u8);
 
-fn main() {
-    match ureq::get("https://adrian.wtf/femaless.txt").call() {
-        Ok(resp) => println!("{}", resp.into_string().unwrap()),
-        Err(Error::Status(404, response)) => println!("{}", response.status_text()),
-        Err(e) => println!("{:?}", e),
-    };
+#[derive(Debug, Deserialize)]
+struct User {
+    name: String,
+    active: bool,
+    #[serde(deserialize_with = "ip_from_string")]
+    ip: Ip4,
+    #[serde(deserialize_with = "datetime_from_string")]
+    created: NaiveDateTime,
 }
 
-fn get_names() -> Result<Vec<String>, ureq::Error> {
-    let body = ureq::get(BETINA).call()?.into_string()?;
-    Ok(body
-        .split_whitespace()
-        .map(|s| s.to_owned())
-        .collect::<Vec<_>>())
+fn ip_from_string<'de, D>(deserializer: D) -> Result<Ip4, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let input_str: &str = Deserialize::deserialize(deserializer)?;
+    let addr: Vec<_> = input_str
+        .split('.')
+        .map(|i| u8::from_str(i).unwrap())
+        .collect();
+    let ip = Ip4(addr[0], addr[1], addr[2], addr[3]);
+    Ok(ip)
+}
+
+fn datetime_from_string<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let unix_secs: i64 = Deserialize::deserialize(deserializer)?;
+    let dt = NaiveDateTime::from_timestamp(unix_secs, 0);
+    Ok(dt)
+}
+
+static API: &str = "https://api.mockaroo.com/api/8515e9a0?count=10&key=9645d580";
+
+fn main() {
+    match ureq::get(API).call() {
+        Ok(resp) => resp
+            .into_string()
+            .unwrap()
+            .lines()
+            .into_iter()
+            .for_each(|line| {
+                // If not doing error checking:
+                // let user: User = serde_json::from_str(line).unwrap()
+                if let Ok(user) = serde_json::from_str::<User>(line) {
+                    println!("{:?}", user)
+                } else {
+                    unimplemented!()
+                }
+            }),
+        Err(ureq::Error::Status(404, response)) => {
+            // Intercept a specific Error response code
+            println!("{}", response.status_text()); //=> "NotFound"
+            exit(1);
+        }
+        Err(e) => {
+            // All other errors
+            println!("{:?}", e);
+            exit(1);
+        }
+    };
 }
