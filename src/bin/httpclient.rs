@@ -53,7 +53,7 @@ fn main() {
             }
         }),
         Err(ureq::Error::Status(404, response)) => {
-            // Intercept a specific Error response code
+            // Intercept a specific Error status code
             println!("{} {}", response.status(), response.status_text()); //=> 404 NotFound
             exit(1);
         }
