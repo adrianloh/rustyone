@@ -48,4 +48,4 @@
    - [Returning values based on assigned type](src/bin/traitscast.rs)
    
 1. ### http
-   - [non-async client](src/bin/httpclient.rs) with `ureq`
+   - [non-async client](src/bin/httpclient.rs) and JSON deserialize

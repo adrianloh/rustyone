@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Deserializer};
 use std::process::exit;
@@ -44,20 +42,15 @@ static API: &str = "https://api.mockaroo.com/api/8515e9a0?count=10&key=9645d580"
 
 fn main() {
     match ureq::get(API).call() {
-        Ok(resp) => resp
-            .into_string()
-            .unwrap()
-            .lines()
-            .into_iter()
-            .for_each(|line| {
-                // If not doing error checking:
-                // let user: User = serde_json::from_str(line).unwrap()
-                if let Ok(user) = serde_json::from_str::<User>(line) {
-                    println!("{:?}", user)
-                } else {
-                    unimplemented!()
-                }
-            }),
+        Ok(resp) => resp.into_string().unwrap().lines().for_each(|line| {
+            // If not doing error checking:
+            // let user: User = serde_json::from_str(line).unwrap()
+            if let Ok(user) = serde_json::from_str::<User>(line) {
+                println!("{:?}", user)
+            } else {
+                unimplemented!()
+            }
+        }),
         Err(ureq::Error::Status(404, response)) => {
             // Intercept a specific Error response code
             println!("{}", response.status_text()); //=> "NotFound"
