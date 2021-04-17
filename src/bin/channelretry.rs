@@ -4,7 +4,6 @@ use std::str::FromStr;
 use std::thread;
 
 use crossbeam::channel::{self, Receiver, Sender};
-use ureq;
 
 #[derive(Debug)]
 struct Doug(String, u64);

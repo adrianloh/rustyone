@@ -4,7 +4,7 @@ trait A {
 
 impl A for Vec<&str> {
     fn f(n: usize) -> Vec<&'static str> {
-        vec!["whaa"; n]
+        vec!["breadsticks"; n]
     }
 }
 
@@ -18,7 +18,8 @@ fn main() {
     // The return value of `A::f()` depends on the
     // type we assign it to
     let a: Vec<i64> = A::f(10);
-    println!("Vec<i64>: {:?}", a);
     let b: Vec<&str> = A::f(10);
+
+    println!("Vec<i64>: {:?}", a);
     println!("Vec<&str>: {:?}", b);
 }

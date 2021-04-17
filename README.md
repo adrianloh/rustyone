@@ -40,9 +40,7 @@
 1. ### async
 
    - `tokio` [tasks](src/bin/tokiotasks.rs)
-   - http server + client and `FuturesUnordered`:
-     1. [Example 1](src/bin/asyncserver1.rs)
-     1. [Example 2](src/bin/asyncserver2.rs)
+   - [http server + client](src/bin/asyncserver.rs) and `FuturesUnordered`
    
 1. ### [Traits and generic functions](src/bin/traitsgenericfunc.rs)
    - [Extending types](src/bin/traitsextend.rs)
