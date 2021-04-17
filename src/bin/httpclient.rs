@@ -46,14 +46,15 @@ fn main() {
             // If not doing error checking:
             // let user: User = serde_json::from_str(line).unwrap()
             if let Ok(user) = serde_json::from_str::<User>(line) {
-                println!("{:?}", user)
+                let dt = user.created.format("[%d %b %Y %T]").to_string();
+                println!("{} {:?}", dt, user)
             } else {
                 unimplemented!()
             }
         }),
         Err(ureq::Error::Status(404, response)) => {
             // Intercept a specific Error response code
-            println!("{}: {}", response.status(), response.status_text()); //=> 404 NotFound
+            println!("{} {}", response.status(), response.status_text()); //=> 404 NotFound
             exit(1);
         }
         Err(e) => {
