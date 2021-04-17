@@ -16,6 +16,8 @@ struct User {
     created: NaiveDateTime,
 }
 
+type Users = Vec<User>;
+
 fn ip_from_str<'de, D>(deserializer: D) -> Result<Ip4, D::Error>
 where
     D: Deserializer<'de>,
@@ -38,20 +40,27 @@ where
     Ok(dt)
 }
 
+// Inspect the schema [here](https://mockaroo.com/8515e9a0)
+#[allow(dead_code)]
 static API: &str = "https://api.mockaroo.com/api/8515e9a0?count=10&key=9645d580";
+
+// Same schema, with fields missing
+#[allow(dead_code)]
+static API_FAIL: &str = "https://api.mockaroo.com/api/8515e9a0?count=10&key=9645d580";
 
 fn main() {
     match ureq::get(API).call() {
-        Ok(resp) => resp.into_string().unwrap().lines().for_each(|line| {
-            // If not doing error checking:
-            // let user: User = serde_json::from_str(line).unwrap()
-            if let Ok(user) = serde_json::from_str::<User>(line) {
-                let dt = user.created.format("[%d %b %Y %T]").to_string();
-                println!("{} {:?}", dt, user)
-            } else {
-                unimplemented!()
+        Ok(resp) => {
+            let body = resp.into_string().unwrap_or_default();
+            match serde_json::from_str::<Users>(&body) {
+                Ok(users) => {
+                    for user in &users {
+                        println!("{:?}", user);
+                    }
+                }
+                Err(e) => println!("{:?}", e),
             }
-        }),
+        }
         Err(ureq::Error::Status(404, response)) => {
             // Intercept a specific Error status code
             println!("{} {}", response.status(), response.status_text()); //=> 404 NotFound

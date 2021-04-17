@@ -28,12 +28,17 @@ fn main() {
     x = result.unwrap() + 19; // safe to unwrap
     assert_eq!(x, 20);
 
-    // Unwrap, but return a default value in the case of an `Err`
-    x = e().unwrap_or(0);
+    // Unwrap, but return the zero-value of type in the case of an `Err`
+    // The zero-value of `i64` is `0`
+    x = e().unwrap_or_default();
     assert_eq!(x, 0);
 
-    // Like `unwrap_or`, but the return value is computed from the closure
-    // The closure is given the value wrapped in `Err`
+    // Unwrap, but return a custom value in the case of en `Err`
+    x = e().unwrap_or(1000);
+    assert_eq!(x, 1000);
+
+    // If the custom value is a function call e.g. `something.to_string()`
+    // use `unwrap_or_else`. The closure is given the value wrapped in `Err`
     let z = es(&6969).unwrap_or_else(|err| *err);
     assert_eq!(z, 6969);
 
@@ -41,8 +46,9 @@ fn main() {
     x = f(1).unwrap();
     assert_eq!(x, 40);
 
-    // Panic on `Err` and print `dying_message()`
-    x = e().expect(&dying_message());
+    // Panic on `Err` and print `message`
+    let message = dying_message();
+    x = e().expect(&message);
     unreachable!(x);
 }
 
