@@ -10,13 +10,13 @@ struct Ip4(u8, u8, u8, u8);
 struct User {
     name: String,
     active: bool,
-    #[serde(deserialize_with = "ip_from_string")]
+    #[serde(deserialize_with = "ip_from_str")]
     ip: Ip4,
-    #[serde(deserialize_with = "datetime_from_string")]
+    #[serde(deserialize_with = "datetime_from_i64")]
     created: NaiveDateTime,
 }
 
-fn ip_from_string<'de, D>(deserializer: D) -> Result<Ip4, D::Error>
+fn ip_from_str<'de, D>(deserializer: D) -> Result<Ip4, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -29,7 +29,7 @@ where
     Ok(ip)
 }
 
-fn datetime_from_string<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
+fn datetime_from_i64<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -53,7 +53,7 @@ fn main() {
         }),
         Err(ureq::Error::Status(404, response)) => {
             // Intercept a specific Error response code
-            println!("{}", response.status_text()); //=> "NotFound"
+            println!("{}: {}", response.status(), response.status_text()); //=> 404 NotFound
             exit(1);
         }
         Err(e) => {
