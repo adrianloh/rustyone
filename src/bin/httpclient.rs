@@ -50,7 +50,18 @@ static API_FAIL: &str = "https://my.api.mockaroo.com/bad_users.json?key=9645d580
 
 fn main() {
     match ureq::get(API).call() {
+        Err(ureq::Error::Status(404, resp)) => {
+            // Intercept a specific Error status code
+            println!("{} {}", resp.status(), resp.status_text()); //=> 404 Not Found
+            exit(0);
+        }
+        Err(e) => {
+            // All other errors
+            println!("{:?}", e);
+            exit(1);
+        }
         Ok(resp) => {
+            // OK 200
             let body = resp.into_string().unwrap_or_default();
             match serde_json::from_str::<Users>(&body) {
                 Ok(users) => {
@@ -61,16 +72,6 @@ fn main() {
                 }
                 Err(e) => println!("{:?}", e),
             }
-        }
-        Err(ureq::Error::Status(404, response)) => {
-            // Intercept a specific Error status code
-            println!("{} {}", response.status(), response.status_text()); //=> 404 NotFound
-            exit(1);
-        }
-        Err(e) => {
-            // All other errors
-            println!("{:?}", e);
-            exit(1);
         }
     };
 }
