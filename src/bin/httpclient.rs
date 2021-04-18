@@ -25,7 +25,7 @@ where
     let input_str: &str = Deserialize::deserialize(deserializer)?;
     let addr: Vec<_> = input_str
         .split('.')
-        .map(|i| u8::from_str(i).unwrap())
+        .map(|i| u8::from_str(i).unwrap_or_default())
         .collect();
     let ip = Ip4(addr[0], addr[1], addr[2], addr[3]);
     Ok(ip)
