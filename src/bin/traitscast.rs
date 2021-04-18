@@ -26,6 +26,6 @@ fn main() {
     let a: Vec<i64> = A::f(10);
     let b: Vec<char> = A::f(10);
 
-    println!("Vec<i64>: {:?}", a);
-    println!("Vec<char>: {:?}", b);
+    println!("{:>10} : {:?}", "Vec<i64>", a);
+    println!("{:>10} : {:?}", "Vec<char>", b);
 }
