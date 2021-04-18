@@ -29,8 +29,7 @@ impl Messy for B {
     }
 }
 
-// Just an empty wrapper for Messify's methods
-//  What's the better way?
+// Just an empty wrapper for Messify's functions
 struct C();
 
 trait Messify<T> {

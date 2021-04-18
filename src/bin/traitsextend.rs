@@ -2,7 +2,7 @@ use chrono::offset::Local;
 use chrono::DateTime;
 use std::time::SystemTime;
 
-// Add two new methods to rust's "SystemTime"
+// Add two new methods to "SystemTime"
 trait TimeFormats {
     fn log_time(self) -> String;
     fn unix_nano(self) -> u128;
@@ -44,11 +44,16 @@ impl TimeFormatted<String> for SystemTime {
 
 fn main() {
     let now = SystemTime::now();
-    println!("{} terminated", now.log_time());
-    println!("{}", now.unix_nano());
 
-    let s: u128 = now.formatted();
-    let t: String = now.formatted();
-    println!("{}", s);
-    println!("{}", t);
+    let x = now.log_time();
+    let y = now.unix_nano();
+
+    println!("{:?}", x);
+    println!("{:?}", y);
+
+    let s: String = now.formatted();
+    let t: u128 = now.formatted();
+
+    println!("{:?}", s);
+    println!("{:?}", t);
 }

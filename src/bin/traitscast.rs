@@ -1,3 +1,5 @@
+// `A` acts as a container for a static function `f` that returns
+// different typed values based on the type we assign it to
 trait A {
     fn f(n: usize) -> Self;
 }
@@ -15,8 +17,6 @@ impl A for Vec<i64> {
 }
 
 fn main() {
-    // The return value of `A::f()` depends on the
-    // type we assign it to
     let a: Vec<i64> = A::f(10);
     let b: Vec<&str> = A::f(10);
 
