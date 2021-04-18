@@ -8,7 +8,7 @@
 
 1. ### Structs
 
-   - [Declare / Create](src/bin/struct_basic.rs)
+   - [Declare / Create](src/bin/struct_basic.rs) and the `Copy` trait
    - [Sortable structs](src/bin/struct_sort.rs)
 
 1. ### [Iterators and Filter/Map/Reduce](src/bin/mapreduce.rs)

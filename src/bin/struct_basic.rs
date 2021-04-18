@@ -1,5 +1,5 @@
 // `Copy` allows the struct to be passed by value or reassigned
-// `Clone` allows `.clone()`
+// `Clone` allows `.clone()` and _must_ be implemented to allow `Copy`
 // `PartialEq` allows us to `==` or `!=` between `Point`s since all fields of `Point` are comparable
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -24,6 +24,11 @@ impl Point {
         self.x += x;
         self.y += y;
     }
+    #[allow(dead_code)]
+    fn moveout(self) -> Self {
+        // return `self` -- essentially moving out!
+        self
+    }
 }
 
 fn main() {
@@ -34,5 +39,22 @@ fn main() {
     println!("translated: {:?}", p1);
 
     let p2 = Point { x: 20.0, y: 20.0 };
-    assert_eq!(p1 == p2, true)
+    assert_eq!(p1 == p2, true);
+
+    // Without `Copy`, this would move `p1` and `p2` into `points`...
+    let points = vec![p1, p2];
+    // `p1` and `p2` are still around!
+    assert_eq!(p1 == p2, true);
+
+    let mut points_copies: Vec<Point> = Vec::new();
+    let mut points_clones: Vec<Point> = Vec::new();
+    points.iter().for_each(|point /* &Point */| {
+        // `Copy` allows us to...
+        let pp1 = *point; // dereference _and_ move `*point` into `pp1`, again copying it
+        let pp2 = pp1; // `pp1` doesn't move, it's copied into `pp2`
+        points_copies.push(pp1);
+        points_clones.push(pp2);
+    });
+    assert_eq!(points, points_copies);
+    assert_eq!(points_copies, points_clones);
 }
