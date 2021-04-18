@@ -42,11 +42,11 @@ where
 
 // Inspect the schema [here](https://mockaroo.com/8515e9a0)
 #[allow(dead_code)]
-static API: &str = "https://api.mockaroo.com/api/8515e9a0?count=10&key=9645d580";
+static API: &str = "https://my.api.mockaroo.com/users.json?key=9645d580";
 
 // Same schema, with fields missing
 #[allow(dead_code)]
-static API_FAIL: &str = "https://api.mockaroo.com/api/8515e9a0?count=10&key=9645d580";
+static API_FAIL: &str = "https://my.api.mockaroo.com/bad_users.json?key=9645d580";
 
 fn main() {
     match ureq::get(API).call() {
@@ -55,7 +55,8 @@ fn main() {
             match serde_json::from_str::<Users>(&body) {
                 Ok(users) => {
                     for user in &users {
-                        println!("{:?}", user);
+                        let dt = user.created.format("[%d %b %Y %T]").to_string();
+                        println!("{} {:?}", dt, user);
                     }
                 }
                 Err(e) => println!("{:?}", e),
